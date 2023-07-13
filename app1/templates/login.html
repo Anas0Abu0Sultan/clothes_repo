@@ -1,0 +1,73 @@
+
+{% block content %}
+<style>
+  /* Custom styles for the login form */
+  .login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .login-form h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .login-form form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .login-form label {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .login-form input[type="text"],
+  .login-form input[type="password"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .login-form button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #0066cc;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .login-form button[type="submit"]:hover {
+    background-color: #0052a3;
+  }
+
+  .signup-link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  .signup-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="login-form">
+  <h2>Login</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+  <a  href="{%url 'signup' %}">Sign</a>
+</div>
+{% endblock %}
