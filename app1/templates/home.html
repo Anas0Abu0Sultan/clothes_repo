@@ -1,9 +1,10 @@
 Anas
 <a href="{% url 'logout'%}">logout</a>
 <a href="{% url 'add_product'%}">Add product</a>
-
-{% for i in prod %}
-{{i.name}} <br>
-{{i.price}} <br>
-<img src={{i.image.url}}>
-{%endfor%}
+{% for category in c %}
+                                    <a href="" class="dropdown-item">{{ category.name }}</a>
+                                {% empty %}
+                                    <p>No categories found.</p>
+                                    {% endfor %}
+ 
+ 

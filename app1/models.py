@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class Category(models.Model):
     category_name = models.CharField(max_length=60)
@@ -14,3 +16,8 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE) #هون انا عندي لينك بين عناصر الكارت وعناصر البرودكت ممكن مجموعة من الكارت ايتم يكومو نفس البرودكت الواحد
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
