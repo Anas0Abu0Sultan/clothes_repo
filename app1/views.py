@@ -87,17 +87,31 @@ def product_via_category(request, id):
 
     return render(request, 'shop.html', {'page_obj': page_obj, 'categories': categories})
 
+
+
+
+
+# @login_required
+# def view_cart(request):
+#     cart_items = CartItem.objects.filter(user=request.user)
+#     total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items)
+#     categories = Category.objects.all()   
+    
+#     return render(request, 'cart.html', {'cart_items': cart_items, 'total': total, 'categories': categories })
+
 @login_required
 def view_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
-    total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items)
     categories = Category.objects.all()
-    total_price_for_one_product = 0  # Initialize the variable
-    
-    for item in cart_items:
-        total_price_for_one_product += item.product.price * item.quantity
-    
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total, 'categories': categories, 'ii': total_price_for_one_product})
+    total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items)
+
+    for cart_item in cart_items:
+        cart_item.total_price_one_product = cart_item.product.price * cart_item.quantity
+
+    return render(request, 'cart.html', {'cart_items': cart_items, 'categories': categories,'total': total})
+
+
+
 
 
 def cancel_from_cart(request, product_id):
