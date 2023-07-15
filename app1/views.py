@@ -36,17 +36,15 @@ def add_product(request):
 
 
 
-
-
 @login_required
 def add_category(request):
     form = category_form()
     if request.method == "POST":
-        form = category_form(request.POST)
+        form = category_form(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect("home")
-    return render(request,'add_category.html',{'form':form})
+    return render(request, 'add_category.html', {'form': form})
 
 
 
@@ -99,43 +97,18 @@ def product_via_category(request, id):
     
 #     return render(request, 'cart.html', {'cart_items': cart_items, 'total': total, 'categories': categories })
 
-# @login_required
-# def view_cart(request):
-#     cart_items = CartItem.objects.filter(user=request.user)
-#     categories = Category.objects.all()
-
-#     for cart_item in cart_items:
-#         cart_item.total_price_one_product = cart_item.product.price * cart_item.quantity
-        
-#     total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items)
-
-#     return render(request, 'cart.html', {'cart_items': cart_items, 'categories': categories,'total': total})
-
-
-from django.http import JsonResponse
-
-@login_required
-def update_cart_item(request, cart_item_id):
-    if request.method == 'POST':
-        quantity = request.POST.get('quantity')
-        if quantity:
-            try:
-                cart_item = CartItem.objects.get(id=cart_item_id, user=request.user)
-                cart_item.quantity = int(quantity)
-                cart_item.total_price_one_product = cart_item.product.price * cart_item.quantity
-                cart_item.save()
-                return JsonResponse({'success': True})
-            except CartItem.DoesNotExist:
-                return JsonResponse({'success': False, 'error': 'CartItem not found'})
-    return JsonResponse({'success': False, 'error': 'Invalid request method or missing quantity'})
-
 @login_required
 def view_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
     categories = Category.objects.all()
-    total = sum(cart_item.total_price_one_product for cart_item in cart_items)
 
-    return render(request, 'cart.html', {'cart_items': cart_items, 'categories': categories, 'total': total})
+    for cart_item in cart_items:
+        cart_item.total_price_one_product = cart_item.product.price * cart_item.quantity
+        
+    total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items)
+
+    return render(request, 'cart.html', {'cart_items': cart_items, 'categories': categories,'total': total})
+
 
 
 
@@ -144,11 +117,30 @@ def cancel_from_cart(request, product_id):
     cart_item.delete()
     return redirect('cart_view')
 
-
-def add_to_card(request,id):
-    product = Product.objects.get(id=id)
-    if request.post == "POST":
-        quantity = request.POST['q.uantity']
-        cart_item = CartItem.objects.create(product=product)
-        
+def add_to_cart(request, id):
+    product_obj = get_object_or_404(Product, id=id)
+    quantity = int(request.POST.get('quantity', 1))
+    cart_item, created = CartItem.objects.get_or_create(product=product_obj, user=request.user)
     
+    if created:
+        cart_item.quantity += quantity - 1
+    else:
+        cart_item.quantity += quantity
+
+    cart_item.save()
+    return redirect('cart_view')
+   
+
+
+
+def update_quantity(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    if request.method == 'POST':
+        quantity_change = request.POST.get('quantity_change')
+        if quantity_change == 'increment':
+            cart_item.quantity += 1
+        elif quantity_change == 'decrement':
+            if cart_item.quantity > 1:
+                cart_item.quantity -= 1
+        cart_item.save()
+    return redirect('cart_view')
