@@ -4,7 +4,7 @@ from app1.forms import category_form
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-
+from django.shortcuts import get_object_or_404, redirect
 
 # @login_required
 def home(request):
@@ -18,6 +18,7 @@ def add_product(request):
     if request.method == 'POST':
         name = request.POST['name']
         price = request.POST['price']
+        last_price = request.POST['last_price']
         image = request.FILES['image']
         category_id = request.POST['category_id']
 
@@ -26,7 +27,8 @@ def add_product(request):
             name = name,
             price = price,
             image = image,
-            category = category_object
+            category = category_object,
+            last_price = last_price
         )
         return redirect('home')
     categories = Category.objects.all()
@@ -86,8 +88,33 @@ def product_via_category(request, id):
     return render(request, 'shop.html', {'page_obj': page_obj, 'categories': categories})
 
 
+
+
+
+# @login_required
+# def view_cart(request):
+#     cart_items = CartItem.objects.filter(user=request.user)
+#     total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items)
+#     categories = Category.objects.all()   
+    
+#     return render(request, 'cart.html', {'cart_items': cart_items, 'total': total, 'categories': categories })
+
 @login_required
 def view_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
-    total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items )
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total})
+    categories = Category.objects.all()
+    total = sum(cartitem.product.price * cartitem.quantity for cartitem in cart_items)
+
+    for cart_item in cart_items:
+        cart_item.total_price_one_product = cart_item.product.price * cart_item.quantity
+
+    return render(request, 'cart.html', {'cart_items': cart_items, 'categories': categories,'total': total})
+
+
+
+
+
+def cancel_from_cart(request, product_id):
+    cart_item = get_object_or_404(CartItem, product_id=product_id, user=request.user)
+    cart_item.delete()
+    return redirect('cart_view')
