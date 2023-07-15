@@ -32,27 +32,27 @@
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto" style="width: 100px;">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-minus">
+                                            <button class="btn btn-sm btn-primary btn-minus" data-product-id="{{ cart_item.product.id }}">
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                         </div>
-                        <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="{{ cart_item.quantity }}">
+                                        <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center quantity-input" value="{{ cart_item.quantity }}" readonly>
                                         <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-plus">
+                                            <button class="btn btn-sm btn-primary btn-plus" data-product-id="{{ cart_item.product.id }}">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="align-middle">
-                                    <span class="quantity-value">${{ cart_item.total_price_one_product }}</span>
+                                    <span class="quantity-value" data-price="{{ cart_item.product.price }}">{{ cart_item.total_price_one_product }}</span>
                                 </td>
-                                
-                                  <td class="align-middle">
+                                <td class="align-middle">
                                     <a href="{% url 'cancel_from_cart' product_id=cart_item.product.id %}">
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fa fa-times"></i>
-                                    </button> </a>
+                                        <button class="btn btn-sm btn-danger">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -84,4 +84,81 @@
         </div>
     </div>
     <!-- Cart End -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const minusButtons = document.querySelectorAll('.btn-minus');
+            const plusButtons = document.querySelectorAll('.btn-plus');
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+            const quantityValueElements = document.querySelectorAll('.quantity-value');
+
+            minusButtons.forEach(function (button, index) {
+                button.addEventListener('click', function () {
+                    let quantity = parseInt(quantityInputs[index].value);
+                    if (quantity > 1) {
+                        quantity--;
+                        quantityInputs[index].value = quantity;
+                        const price = parseFloat(quantityValueElements[index].getAttribute('data-price'));
+                        const total = price * quantity;
+                        quantityValueElements[index].textContent = `$${total.toFixed(2)}`;
+                    }
+                });
+            });
+
+            plusButtons.forEach(function (button, index) {
+                button.addEventListener('click', function () {
+                    let quantity = parseInt(quantityInputs[index].value);
+                    quantity++;
+                    quantityInputs[index].value = quantity;
+                    const price = parseFloat(quantityValueElements[index].getAttribute('data-price'));
+                    const total = price * quantity;
+                    quantityValueElements[index].textContent = `$${total.toFixed(2)}`;
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const minusButtons = document.querySelectorAll('.btn-minus');
+    const plusButtons = document.querySelectorAll('.btn-plus');
+    const quantityInputs = document.querySelectorAll('.quantity-input');
+    const quantityValueElements = document.querySelectorAll('.quantity-value');
+    const totalElement = document.getElementById('total');
+
+    minusButtons.forEach(function (button, index) {
+        button.addEventListener('click', function () {
+            let quantity = parseInt(quantityInputs[index].value);
+            if (quantity > 1) {
+                quantity--;
+                quantityInputs[index].value = quantity;
+                const price = parseFloat(quantityValueElements[index].getAttribute('data-price'));
+                const total = price * quantity;
+                quantityValueElements[index].textContent = `$${total.toFixed(2)}`;
+                updateTotal();
+            }
+        });
+    });
+
+    plusButtons.forEach(function (button, index) {
+        button.addEventListener('click', function () {
+            let quantity = parseInt(quantityInputs[index].value);
+            quantity++;
+            quantityInputs[index].value = quantity;
+            const price = parseFloat(quantityValueElements[index].getAttribute('data-price'));
+            const total = price * quantity;
+            quantityValueElements[index].textContent = `$${total.toFixed(2)}`;
+            updateTotal();
+        });
+    });
+
+    function updateTotal() {
+        let total = 0;
+        quantityValueElements.forEach(function (element) {
+            total += parseFloat(element.textContent.replace('$', ''));
+        });
+        totalElement.textContent = `$${total.toFixed(2)}`;
+    }
+
+    updateTotal();
+});
+    </script>
 {% endblock %}
