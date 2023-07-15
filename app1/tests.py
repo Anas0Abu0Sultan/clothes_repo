@@ -1,3 +1,6 @@
-from django.test import TestCase
 
-# Create your tests here.
+
+# ##########################33
+# <td class="align-middle">
+#                                     <span class="quantity-value" data-quantity="{{ cart_item.quantity }}">{{ cart_item.quantity }}</span>
+#                                 </td>

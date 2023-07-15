@@ -163,7 +163,7 @@
                                 <div class="product-img position-relative overflow-hidden">
                                     <img class="img-fluid w-100" src="{{ product.image.url }}" alt="" style="width: 250px; height:270px;">
                                     <div class="product-action">
-                                        <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
+                                        <a class="btn btn-outline-dark btn-square" href="{% url 'add_to_cart' id=product.id%}"><i class="fa fa-shopping-cart"></i></a>
                                      
                                     </div>
                                 </div>
