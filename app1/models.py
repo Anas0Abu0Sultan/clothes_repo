@@ -23,3 +23,4 @@ class CartItem(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     total_price_one_product = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    # total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
