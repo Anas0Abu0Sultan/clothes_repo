@@ -6,10 +6,40 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect
 
-# @login_required
+# for home view
+import random
+import datetime
+
+# #@login_required
+# def home(request):
+#     categories = Category.objects.all()  # Retrieve categories from the backend, adjust the query as needed
+#     context = {'categories': categories}
+#     return render(request, 'index.html', context)
+
+
+@login_required
 def home(request):
-    categories = Category.objects.all()  # Retrieve categories from the backend, adjust the query as needed
-    context = {'categories': categories}
+    categories = Category.objects.all()
+    today = datetime.date.today()
+    last_generated_date = request.session.get('random_products_generated_date')
+    
+    if last_generated_date != today:
+        products = list(Product.objects.all())
+        random.shuffle(products)
+        random_products = products[:8]
+        
+        # Convert the date object to a string representation
+        request.session['random_products_generated_date'] = today.isoformat()
+        request.session['random_products'] = [product.pk for product in random_products]
+    else:
+        random_products_pks = request.session.get('random_products')
+        random_products = Product.objects.filter(pk__in=random_products_pks)
+    
+    context = {
+        'categories': categories,
+        'random_products': random_products,
+    }
+    
     return render(request, 'index.html', context)
 
 
@@ -19,6 +49,7 @@ def add_product(request):
         name = request.POST['name']
         price = request.POST['price']
         last_price = request.POST['last_price']
+        rating_range = request.POST['rating']
         image = request.FILES['image']
         category_id = request.POST['category_id']
 
@@ -28,7 +59,8 @@ def add_product(request):
             price = price,
             image = image,
             category = category_object,
-            last_price = last_price
+            last_price = last_price,
+            rating_range=rating_range,
         )
         return redirect('home')
     categories = Category.objects.all()
@@ -111,12 +143,13 @@ def view_cart(request):
 
 
 
-
+@login_required
 def cancel_from_cart(request, product_id):
     cart_item = get_object_or_404(CartItem, product_id=product_id, user=request.user)
     cart_item.delete()
     return redirect('cart_view')
 
+@login_required
 def add_to_cart(request, id):
     product_obj = get_object_or_404(Product, id=id)
     quantity = int(request.POST.get('quantity', 1))
@@ -132,7 +165,7 @@ def add_to_cart(request, id):
    
 
 
-
+@login_required
 def update_quantity(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
     if request.method == 'POST':
