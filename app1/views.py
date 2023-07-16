@@ -50,6 +50,7 @@ def add_product(request):
         price = request.POST['price']
         last_price = request.POST['last_price']
         rating_range = request.POST['rating']
+        description = request.POST['description']
         image = request.FILES['image']
         category_id = request.POST['category_id']
 
@@ -61,6 +62,7 @@ def add_product(request):
             category = category_object,
             last_price = last_price,
             rating_range=rating_range,
+            description=description,
         )
         return redirect('home')
     categories = Category.objects.all()
@@ -177,3 +179,8 @@ def update_quantity(request, cart_item_id):
                 cart_item.quantity -= 1
         cart_item.save()
     return redirect('cart_view')
+
+def product_detail(request,id):
+    one_product = Product.objects.get(id=id)
+    categories = Category.objects.all()
+    return render(request,'detail.html',{'one_product':one_product,'categories':categories})

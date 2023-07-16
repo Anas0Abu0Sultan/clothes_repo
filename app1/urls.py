@@ -20,4 +20,6 @@ urlpatterns = [
     path('update_quantity/<int:cart_item_id>/', views.update_quantity, name='update_quantity'),
     path("add_to_cart/<int:id>",views.add_to_cart,name="add_to_cart"),
 
+    path('product_detail/<int:id>/',views.product_detail,name="product_detail"),
+
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
