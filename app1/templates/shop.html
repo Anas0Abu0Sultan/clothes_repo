@@ -46,6 +46,8 @@
                                 <div class="product-img position-relative overflow-hidden">
                                     <img class="img-fluid w-100" src="{{ product.image.url }}" alt="" style="width: 250px; height:270px;">
                                     <div class="product-action">
+                                        <a class="btn btn-outline-dark btn-square" href="{% url 'product_detail' id=product.id %}"><i class="fa fa-search"></i></a>
+
                                         <a class="btn btn-outline-dark btn-square" href="{% url 'add_to_cart' id=product.id%}"><i class="fa fa-shopping-cart"></i></a>
                                      
                                     </div>
@@ -56,12 +58,23 @@
                                         <h5>${{ product.price }}</h5><h6 class="text-muted ml-2"><del>${{ product.last_price }}</del></h6>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-center mb-1">
-                                        <small class="fa fa-star text-primary mr-1"></small>
-                                        <small class="fa fa-star text-primary mr-1"></small>
-                                        <small class="fa fa-star text-primary mr-1"></small>
-                                        <small class="fa fa-star text-primary mr-1"></small>
-                                        <small class="fa fa-star text-primary mr-1"></small>
-                                        <small>(99)</small>
+                                        {% if product.rating_range > 0 %}
+                                            <small class="fa fa-star text-primary mr-1"></small>
+                                        {% else %}
+                                            No rating
+                                        {% endif %}
+                                        {% if product.rating_range > 1 %}
+                                            <small class="fa fa-star text-primary mr-1"></small>
+                                        {% endif %}
+                                        {% if product.rating_range > 2 %}
+                                            <small class="fa fa-star text-primary mr-1"></small>
+                                        {% endif %}
+                                        {% if product.rating_range > 3 %}
+                                            <small class="fa fa-star text-primary mr-1"></small>
+                                        {% endif %}
+                                        {% if product.rating_range > 4 %}
+                                            <small class="fa fa-star text-primary mr-1"></small>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
