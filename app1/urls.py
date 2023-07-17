@@ -22,4 +22,10 @@ urlpatterns = [
 
     path('product_detail/<int:id>/',views.product_detail,name="product_detail"),
 
+    path('success/', views.payment_success, name='payment_success'),
+    path('checkout/', views.process_payment, name='process_payment'),
+
+    path('billing/address/',views.BillingAddress,name="BillingAddress"),
+
+
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

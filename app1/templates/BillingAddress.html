@@ -1,0 +1,101 @@
+{%extends 'base.html' %}  
+{% load static%}
+ {% block content%}
+
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="#">Home</a>
+                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
+                    <span class="breadcrumb-item active">Checkout</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Checkout Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Billing Address</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <form method="post">
+                                {% csrf_token %}
+                            <label>First Name</label>
+                            <input class="form-control" type="text" placeholder="Anas" name="first_name" maxlength="50">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" type="text" placeholder="Sultan" name="last_name" maxlength="50">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" type="text" placeholder="example@email.com" name="email">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" type="text" placeholder="+972 594 073 606" name="mobile_no" maxlength="20">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 1</label>
+                            <input class="form-control" type="text" placeholder="123 Street" name="address_line1" maxlength="100">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 2</label>
+                            <input class="form-control" type="text" placeholder="123 Street" name="address_line2" maxlength="100">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Country</label>
+                            <input class="form-control" type="text" placeholder="Country" name="country" maxlength="50">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>City</label>
+                            <input class="form-control" type="text" placeholder="New York" name="city" maxlength="50">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>State</label>
+                            <input class="form-control" type="text" placeholder="New York" name="state" maxlength="50">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>ZIP Code</label>
+                            <input class="form-control" type="text" placeholder="p900" name="zip_code" maxlength="10">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-block btn-primary font-weight-bold py-3">submit to pay</button>
+                </div>
+            </form>
+            </div>
+            <div class="col-lg-4">
+                <div class="bg-light p-30 mb-5">
+                    <div class="border-bottom">
+                        
+                        
+                    </div>
+                  
+                    <div class="pt-2">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5>Total Price:</h5>
+                            <h5>${{total}}</h5>
+                        </div>
+                       
+                    </div>
+                    
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <h5>Delevary Price:<br> <br> You will be contacted via e-mail to inform you of the delivery price according to your area.</h5>
+                    <img src="{% static 'img/delevary.jpg'%}" style="width: 200px; height: 200px;">
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Checkout End -->
+{% endblock%}
+
