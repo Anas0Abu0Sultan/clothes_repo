@@ -27,3 +27,21 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     total_price_one_product = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     # total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+
+
+
+class BillingAddress(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField()
+    mobile_no = models.CharField(max_length=20)
+    address_line1 = models.CharField(max_length=100)
+    address_line2 = models.CharField(max_length=100)
+    country = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    zip_code = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.user.username

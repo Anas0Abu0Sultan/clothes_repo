@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from app1.models import Category,Product,CartItem
+from app1.models import Category,Product,CartItem,BillingAddress
 from app1.forms import category_form
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,15 @@ from django.shortcuts import get_object_or_404, redirect
 # for home view
 import random
 import datetime
+
+# For payment 
+import stripe
+from app1.payments import PaymentService
+from django.conf import settings
+
+
+
+
 
 # #@login_required
 # def home(request):
@@ -83,22 +92,25 @@ def add_category(request):
 
 
 
+@login_required
+def update_quantity(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    if request.method == 'POST':
+        quantity_change = request.POST.get('quantity_change')
+        if quantity_change == 'increment':
+            cart_item.quantity += 1
+        elif quantity_change == 'decrement':
+            if cart_item.quantity > 1:
+                cart_item.quantity -= 1
+        cart_item.save()
+    return redirect('cart_view')
 
-def signup(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        
-        if User.objects.filter(username=username).exists():
-            error_message = "Username already exists. Please choose a different username."
-            return render(request, "signup.html", {"error_message": error_message})
-        
-        user = User.objects.create_user(username=username, email=email, password=password)
-        
-        return redirect("login")
-    
-    return render(request, "signup.html")
+
+def product_detail(request,id):
+    one_product = Product.objects.get(id=id)
+    categories = Category.objects.all()
+    return render(request,'detail.html',{'one_product':one_product,'categories':categories})
+
 
 
 # def product_via_category(request,id):
@@ -131,6 +143,11 @@ def product_via_category(request, id):
 #     categories = Category.objects.all()   
     
 #     return render(request, 'cart.html', {'cart_items': cart_items, 'total': total, 'categories': categories })
+
+
+
+
+################################## CART #######################################################
 
 @login_required
 def view_cart(request):
@@ -168,21 +185,113 @@ def add_to_cart(request, id):
    
 
 
+
+##############################  Payment #######################################################
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
 @login_required
-def update_quantity(request, cart_item_id):
-    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+def process_payment(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
+
     if request.method == 'POST':
-        quantity_change = request.POST.get('quantity_change')
-        if quantity_change == 'increment':
-            cart_item.quantity += 1
-        elif quantity_change == 'decrement':
-            if cart_item.quantity > 1:
-                cart_item.quantity -= 1
-        cart_item.save()
-    return redirect('cart_view')
+        # Retrieve the payment token from the request
+        token = request.POST.get('stripeToken')
+
+        try:
+            # Create a charge using Stripe
+            charge = stripe.Charge.create(
+                amount=int(total * 100),  # Stripe requires the amount in cents
+                currency='usd',
+                description='Payment for products',
+                source=token,
+            )
+
+            # If the charge is successful, complete the order and do necessary processing
+            if charge.status == 'succeeded':
+                # Clear the cart items or mark them as purchased
+
+                # Redirect to a success page or display a success message
+                return redirect('payment_success')
+
+        except stripe.error.CardError as e:
+            # Handle card errors and display an error message to the user
+            error = e.user_message
+
+    # Render the payment form with the total amount
+    context = {
+        'total': total
+    }
+    return render(request, 'checkout.html', context)
 
 
-def product_detail(request,id):
-    one_product = Product.objects.get(id=id)
-    categories = Category.objects.all()
-    return render(request,'detail.html',{'one_product':one_product,'categories':categories})
+
+
+
+def payment_success(request):
+    return render(request, 'success.html')
+
+
+
+################################3 SIGN UP #########################################3
+
+
+
+def signup(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        
+        if User.objects.filter(username=username).exists():
+            error_message = "Username already exists. Please choose a different username."
+            return render(request, "signup.html", {"error_message": error_message})
+        
+        user = User.objects.create_user(username=username, email=email, password=password)
+        
+        return redirect("login")
+    
+    return render(request, "signup.html")
+
+
+############################################## BillingAddress  #######################################
+
+
+
+@login_required
+def billing_address_view(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
+
+    if request.method == 'POST':
+        user= request.user
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        mobile_no = request.POST['mobile_no']
+        address_line1 = request.POST['address_line1']
+        address_line2 = request.POST['address_line2']
+        country = request.POST['country']
+        city = request.POST['city']
+        state = request.POST['state']
+        zip_code = request.POST['zip_code']
+
+        billing_address = BillingAddress.objects.create(
+            user=user,
+            first_name = first_name,
+            last_name = last_name,
+            email = email,
+            mobile_no = mobile_no,
+            address_line1 = address_line1,
+            address_line2 = address_line2,
+            country = country,
+            city = city,
+            state = state,
+            zip_code = zip_code
+        )
+
+        return redirect('process_payment')
+
+    return render(request, 'BillingAddress.html', {'total': total})
