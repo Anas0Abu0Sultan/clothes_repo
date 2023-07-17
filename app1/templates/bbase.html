@@ -86,8 +86,22 @@
                 </a>
             </div>
 
-          
-            <div class="col-lg-8 col-6 text-right">
+           
+    <div class="col-lg-4 col-6 text-left">
+        <form method="GET" action="{% url 'pro_via_cat' id=category.id %}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="Search for products" value="{{ request.GET.search }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+            
+            
+            <div class="col-lg-4 col-6 text-right">
                 <p class="m-0">Customer Service</p>
                 <h5 class="m-0">+972 594 073 606</h5>
             </div>
