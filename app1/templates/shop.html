@@ -1,11 +1,5 @@
-{% extends 'base.html'%}
+{% extends 'bbase.html'%}
 {% block content%}
-<style>
-    img {
-        width: 200px; /* Set the desired width */
-        height: 200px; /* Set the desired height */
-    }
-    </style>
 
     <!-- Breadcrumb Start -->
     <div class="container-fluid">
@@ -19,69 +13,87 @@
             </div>
         </div>
     </div>
-    <!-- Breadcrumb End -->
-
-
-    <!-- Shop Start -->
-    
-            <!-- Shop Sidebar End -->
-
-
-            <!-- Shop Product Start -->
           
-            <div class="col-lg-9 col-md-8">
-                <div class="row pb-3">
-                    <div class="col-12 pb-1">
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <div>
-                                <button class="btn btn-sm btn-light"><i class="fa fa-th-large"></i></button>
-                                <button class="btn btn-sm btn-light ml-2"><i class="fa fa-bars"></i></button>
-                            </div>
+
+
+
+
+        
+        <div class="row pb-3">
+            {% for product in page_obj %}
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1" >
+                <div class="product-item bg-light mb-4">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="{{ product.image.url }}" alt="" style="width: 100%; height: 270px;">
+                        <div class="product-action">
+                            <a class="btn btn-outline-dark btn-square" href="{% url 'product_detail' id=product.id %}"><i class="fa fa-search"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="{% url 'add_to_cart' id=product.id %}"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>
-            
-                    {% for product in page_obj %}
-                        <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
-                            <div class="product-item bg-light mb-4">
-                                <div class="product-img position-relative overflow-hidden">
-                                    <img class="img-fluid w-100" src="{{ product.image.url }}" alt="" style="width: 250px; height:270px;">
-                                    <div class="product-action">
-                                        <a class="btn btn-outline-dark btn-square" href="{% url 'product_detail' id=product.id %}"><i class="fa fa-search"></i></a>
-
-                                        <a class="btn btn-outline-dark btn-square" href="{% url 'add_to_cart' id=product.id%}"><i class="fa fa-shopping-cart"></i></a>
-                                     
-                                    </div>
-                                </div>
-                                <div class="text-center py-4">
-                                    <a class="h6 text-decoration-none text-truncate" href="">{{ product.name }}</a>
-                                    <div class="d-flex align-items-center justify-content-center mt-2">
-                                        <h5>${{ product.price }}</h5><h6 class="text-muted ml-2"><del>${{ product.last_price }}</del></h6>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-center mb-1">
-                                        {% if product.rating_range > 0 %}
-                                            <small class="fa fa-star text-primary mr-1"></small>
-                                        {% else %}
-                                            No rating
-                                        {% endif %}
-                                        {% if product.rating_range > 1 %}
-                                            <small class="fa fa-star text-primary mr-1"></small>
-                                        {% endif %}
-                                        {% if product.rating_range > 2 %}
-                                            <small class="fa fa-star text-primary mr-1"></small>
-                                        {% endif %}
-                                        {% if product.rating_range > 3 %}
-                                            <small class="fa fa-star text-primary mr-1"></small>
-                                        {% endif %}
-                                        {% if product.rating_range > 4 %}
-                                            <small class="fa fa-star text-primary mr-1"></small>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate" href="">{{ product.name }}</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <h5>${{ product.price }}</h5>
+                            <h6 class="text-muted ml-2"><del>${{ product.last_price }}</del></h6>
                         </div>
-                    {% endfor %}
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            {% if product.rating_range > 0 %}
+                                <small class="fa fa-star text-primary mr-1"></small>
+                            {% else %}
+                                No rating
+                            {% endif %}
+                            {% if product.rating_range > 1 %}
+                                <small class="fa fa-star text-primary mr-1"></small>
+                            {% endif %}
+                            {% if product.rating_range > 2 %}
+                                <small class="fa fa-star text-primary mr-1"></small>
+                            {% endif %}
+                            {% if product.rating_range > 3 %}
+                                <small class="fa fa-star text-primary mr-1"></small>
+                            {% endif %}
+                            {% if product.rating_range > 4 %}
+                                <small class="fa fa-star text-primary mr-1"></small>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
-            
+            {% endfor %}
+        </div>
+        
+
+
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
 
 {% endblock %}

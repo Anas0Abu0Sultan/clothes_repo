@@ -35,6 +35,7 @@ def home(request):
         random_products_pks = request.session.get('random_products')
         random_products = Product.objects.filter(pk__in=random_products_pks)
     
+    
     context = {
         'categories': categories,
         'random_products': random_products,
@@ -107,19 +108,19 @@ def signup(request):
     
 #     return render(request,'shop.html',{'products':products,'categories':categories})
     
-
 def product_via_category(request, id):
     category = Category.objects.get(id=id)
     categories = Category.objects.all()
     products = Product.objects.filter(category=category)
 
-    paginator = Paginator(products, 9)  # Display 9 products per page
+    paginator = Paginator(products, 12)  # Display 12 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'shop.html', {'page_obj': page_obj, 'categories': categories})
-
-
+    search_query = request.GET.get('search')
+    if search_query:
+     page_obj = products.filter(name__icontains=search_query)
+    return render(request, 'shop.html', {'page_obj': page_obj, 'categories': categories,'category':category,'products':products})
 
 
 
@@ -179,6 +180,7 @@ def update_quantity(request, cart_item_id):
                 cart_item.quantity -= 1
         cart_item.save()
     return redirect('cart_view')
+
 
 def product_detail(request,id):
     one_product = Product.objects.get(id=id)
