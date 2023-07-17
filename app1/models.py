@@ -29,8 +29,7 @@ class CartItem(models.Model):
     # total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
 
-
-class BillingAddress(models.Model):
+class billing_address(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -42,6 +41,3 @@ class BillingAddress(models.Model):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
-
-    def __str__(self):
-        return self.user.username
