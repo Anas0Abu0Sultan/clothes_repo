@@ -1,5 +1,74 @@
-{% extends 'base.html'%}
-{% load static%}
+<!-- payment.html -->
+{% extends 'base.html' %}
 {% block content %}
+<head>
+    <title>Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
 
-{%endblock%}
+        .payment-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .stripe-button {
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .stripe-button > span {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e34f59;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .stripe-button > span:hover {
+            background-color: #5f80a3;
+        }
+        button{
+            align-items: center;
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h1>Payment</h1>
+        <h4>The total price is: ${{total}}</h4>
+        <script>
+            // Assign the value of {{ total }} to the JavaScript variable
+            var totalscript = "{{ total }}";
+
+          </script>
+        <form method="POST" action="{% url 'process_payment' %}">
+            {% csrf_token %}
+            <script
+                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key='pk_test_51NRFa9I9ebQOzwPpIXsiQ5mG66AFFc9PFJDwN356ve2VWYmSCQyeSA0bDTA6HiOIpmCeNSMbjl3uucBBrG8rL34u00whRH0BzP'
+                data-amount= "totalscript"
+                data-name="Your Store"
+                data-description="Payment for products"
+                data-currency="usd"
+            ></script>
+        </form>
+    </div>
+</body>
+{% endblock %}

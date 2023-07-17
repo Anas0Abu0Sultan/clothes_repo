@@ -1,11 +1,10 @@
 from django.shortcuts import render,redirect
-from app1.models import Category,Product,CartItem,BillingAddress
+from app1.models import Category,Product,CartItem,billing_address
 from app1.forms import category_form
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect
-
 # for home view
 import random
 import datetime
@@ -26,7 +25,7 @@ from django.conf import settings
 #     return render(request, 'index.html', context)
 
 
-@login_required
+# @login_required
 def home(request):
     categories = Category.objects.all()
     today = datetime.date.today()
@@ -258,40 +257,39 @@ def signup(request):
 
 ############################################## BillingAddress  #######################################
 
-
-
-@login_required
-def billing_address_view(request):
+def add_billing_address(request):
     cart_items = CartItem.objects.filter(user=request.user)
     total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
 
     if request.method == 'POST':
-        user= request.user
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        mobile_no = request.POST['mobile_no']
-        address_line1 = request.POST['address_line1']
-        address_line2 = request.POST['address_line2']
-        country = request.POST['country']
-        city = request.POST['city']
-        state = request.POST['state']
-        zip_code = request.POST['zip_code']
+        user = request.user
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        mobile_no = request.POST.get('mobile_no')
+        address_line1 = request.POST.get('address_line1')
+        address_line2 = request.POST.get('address_line2')
+        country = request.POST.get('country')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        zip_code = request.POST.get('zip_code')
 
-        billing_address = BillingAddress.objects.create(
-            user=user,
-            first_name = first_name,
-            last_name = last_name,
-            email = email,
-            mobile_no = mobile_no,
-            address_line1 = address_line1,
-            address_line2 = address_line2,
-            country = country,
-            city = city,
-            state = state,
-            zip_code = zip_code
-        )
+        # Check if the user already has a billing address
+        billing_address_object, created = billing_address.objects.get_or_create(user=user)
 
+        # Update the billing address fields
+        billing_address_object.first_name = first_name
+        billing_address_object.last_name = last_name
+        billing_address_object.email = email
+        billing_address_object.mobile_no = mobile_no
+        billing_address_object.address_line1 = address_line1
+        billing_address_object.address_line2 = address_line2
+        billing_address_object.country = country
+        billing_address_object.city = city
+        billing_address_object.state = state
+        billing_address_object.zip_code = zip_code
+
+        billing_address_object.save()
         return redirect('process_payment')
 
     return render(request, 'BillingAddress.html', {'total': total})

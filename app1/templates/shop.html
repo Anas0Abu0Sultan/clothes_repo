@@ -21,10 +21,10 @@
         
         <div class="row pb-3">
             {% for product in page_obj %}
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1" >
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1" style="padding: 10px;">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="{{ product.image.url }}" alt="" style="width: 100%; height: 270px;">
+                        <img class="img-fluid w-100" src="{{ product.image.url }}" alt="" style="width: 100%; height: 270px; padding-left: 80px;">
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href="{% url 'product_detail' id=product.id %}"><i class="fa fa-search"></i></a>
                             <a class="btn btn-outline-dark btn-square" href="{% url 'add_to_cart' id=product.id %}"><i class="fa fa-shopping-cart"></i></a>
