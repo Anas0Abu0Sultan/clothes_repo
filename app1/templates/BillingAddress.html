@@ -29,43 +29,43 @@
                             <form method="post">
                                 {% csrf_token %}
                             <label>First Name</label>
-                            <input class="form-control" type="text" placeholder="Anas" name="first_name" maxlength="50">
+                            <input class="form-control" type="text" placeholder="Anas" name="first_name" maxlength="50" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Last Name</label>
-                            <input class="form-control" type="text" placeholder="Sultan" name="last_name" maxlength="50">
+                            <input class="form-control" type="text" placeholder="Sultan" name="last_name" maxlength="50" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>E-mail</label>
-                            <input class="form-control" type="text" placeholder="example@email.com" name="email">
+                            <input class="form-control" type="text" placeholder="example@email.com" name="email" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Mobile No</label>
-                            <input class="form-control" type="text" placeholder="+972 594 073 606" name="mobile_no" maxlength="20">
+                            <input class="form-control" type="text" placeholder="+972 594 073 606" name="mobile_no" maxlength="20" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Address Line 1</label>
-                            <input class="form-control" type="text" placeholder="123 Street" name="address_line1" maxlength="100">
+                            <input class="form-control" type="text" placeholder="123 Street" name="address_line1" maxlength="100" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Address Line 2</label>
-                            <input class="form-control" type="text" placeholder="123 Street" name="address_line2" maxlength="100">
+                            <input class="form-control" type="text" placeholder="123 Street" name="address_line2" maxlength="100" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Country</label>
-                            <input class="form-control" type="text" placeholder="Country" name="country" maxlength="50">
+                            <input class="form-control" type="text" placeholder="Country" name="country" maxlength="50" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>City</label>
-                            <input class="form-control" type="text" placeholder="New York" name="city" maxlength="50">
+                            <input class="form-control" type="text" placeholder="New York" name="city" maxlength="50" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>State</label>
-                            <input class="form-control" type="text" placeholder="New York" name="state" maxlength="50">
+                            <input class="form-control" type="text" placeholder="New York" name="state" maxlength="50" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>ZIP Code</label>
-                            <input class="form-control" type="text" placeholder="p900" name="zip_code" maxlength="10">
+                            <input class="form-control" type="text" placeholder="p900" name="zip_code" maxlength="10" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-block btn-primary font-weight-bold py-3">submit to pay</button>

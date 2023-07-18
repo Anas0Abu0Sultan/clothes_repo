@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Welcome to the Dashboard</h2>
+
+  {% for item in data %}
+    <div class="user-card">
+      <h3 class="user-card__title">User: {{ item.user.username }}</h3>
+      <p class="user-card__email">Email: {{ item.user.email }}</p>
+
+      <div class="billing-address">
+        <h4 class="billing-address__title">Billing Address</h4>
+        <ul class="billing-address__list">
+          <li><strong>First Name:</strong> {{ item.billing_address.first_name }}</li>
+          <li><strong>Last Name:</strong> {{ item.billing_address.last_name }}</li>
+          <li><strong>Email:</strong> {{ item.billing_address.email }}</li>
+          <li><strong>Mobile No:</strong> {{ item.billing_address.mobile_no }}</li>
+          <li><strong>Address Line 1:</strong> {{ item.billing_address.address_line1 }}</li>
+          <li><strong>Address Line 2:</strong> {{ item.billing_address.address_line2 }}</li>
+          <li><strong>Country:</strong> {{ item.billing_address.country }}</li>
+          <li><strong>City:</strong> {{ item.billing_address.city }}</li>
+          <li><strong>State:</strong> {{ item.billing_address.state }}</li>
+          <li><strong>Zip Code:</strong> {{ item.billing_address.zip_code }}</li>
+        </ul>
+      </div>
+
+      <div class="cart-items">
+        <h4 class="cart-items__title">Cart Items</h4>
+        <table class="cart-items__table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cart_item in item.cart_items %}
+              <tr>
+                <td>{{ cart_item.product.name }}</td>
+                <td>{{ cart_item.quantity }}</td>
+                <td>{{ cart_item.total_price_one_product }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2"><strong>Total:</strong></td>
+              <td>{{ item.total }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="chart-container">
+    <h4>Highest Selling Products</h4>
+    <img src="data:image/png;base64,{{ chart_image }}" alt="Chart">
+  </div>
+  <style>
+    .user-card {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+  
+    .user-card__title {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+  
+    .user-card__email {
+      margin-bottom: 15px;
+      color: #777;
+    }
+  
+    .billing-address__title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+  
+    .billing-address__list li {
+      margin-bottom: 5px;
+    }
+  
+    .cart-items__title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+  
+    .cart-items__table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  
+    .cart-items__table th,
+    .cart-items__table td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+  
+    .cart-items__table th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+      color: #333;
+      text-align: left;
+    }
+  
+    .cart-items__table tfoot td {
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+  
+{% endblock %}

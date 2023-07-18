@@ -26,7 +26,9 @@ urlpatterns = [
     path('checkout/', views.process_payment, name='process_payment'),
 
     path('add/billing/address',views.add_billing_address,name="add_billing_address"),
+    path("contact/",views.contact_view,name="contact_view"),
 
+    path('dashboard/', views.dashboard, name='dashboard'),
 
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
