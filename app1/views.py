@@ -293,3 +293,122 @@ def add_billing_address(request):
         return redirect('process_payment')
 
     return render(request, 'BillingAddress.html', {'total': total})
+
+
+def contact(requset):
+    return render(requset,'contact.html',{})
+
+
+
+############################################## Email  #######################################
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.conf import settings
+from django.http import HttpResponse
+
+def contact_view(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        # Send the email
+        send_mail(subject, f"Name: {name}\nEmail: {email}\nMessage: {message}", email, [settings.EMAIL_HOST_USER])
+
+        # return HttpResponse('Email sent successfully! ☺☻♥♦♣♠•◘○☺☻☺0♂♀♪♫☼►◄↕‼¶§▬↨↑cd2()*+,-'&%$#"! ▼▲↔∟←→↓↑↨')
+        return render(request, 'contact.html', {'success_message': 'Email sent successfully!'})
+
+    return render(request, 'contact.html')
+
+#################################### Admin Views ##################################3
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+import matplotlib.pyplot as plt
+
+import matplotlib.pyplot as plt
+import io
+import base64
+
+
+def fetch_highest_selling_products_data():
+    # Query the products ordered by quantity sold in descending order
+    products = Product.objects.order_by('-quantity_sold')
+
+    # Get the highest selling products data
+    highest_selling_products_data = [
+        {'product_name': product.name, 'quantity': product.quantity_sold}
+        for product in products
+    ]
+
+    return highest_selling_products_data
+
+
+@login_required
+def dashboard(request):
+
+    highest_selling_products_data = fetch_highest_selling_products_data()
+    labels = [item['product_name'] for item in highest_selling_products_data]
+    quantities = [item['quantity'] for item in highest_selling_products_data]
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(labels, quantities)
+    plt.xlabel('Product')
+    plt.ylabel('Quantity Sold')
+    plt.title('Highest Selling Products')
+
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+
+    chart_image = base64.b64encode(buffer.read()).decode('utf-8')
+
+    users = User.objects.all()
+    data = []
+    for user in users:
+        billing_addresss = billing_address.objects.filter(user=user).first()
+        cart_items = CartItem.objects.filter(user=user)
+        total = 0
+        for item in cart_items:
+                total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
+        data.append({
+            'user': user,
+            'billing_address': billing_addresss,
+            'cart_items': cart_items,
+            'total': total
+        })
+    context = {
+        'data': data,
+        'highest_selling_products_data': highest_selling_products_data,
+        'chart_image': chart_image,
+ 
+    }
+    return render(request, 'dashboard/dashboard.html', context)
+    
+
+
+
+
+
+
+
+
+def generate_chart(highest_selling_products_data):
+    # Extract product names and quantities
+    labels = [item['product_name'] for item in highest_selling_products_data]
+    quantities = [item['quantity'] for item in highest_selling_products_data]
+
+    # Generate the chart
+    plt.bar(labels, quantities)
+    plt.xlabel('Product')
+    plt.ylabel('Quantity Sold')
+    plt.title('Highest Selling Products')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+
+    # Save the chart to a file
+    chart_filename = 'highest_selling_products_chart.png'
+    plt.savefig(chart_filename)
+
+    return chart_filename

@@ -17,6 +17,7 @@ class Product(models.Model):
     last_price = models.DecimalField(max_digits=9,decimal_places=2,default=0.00)
     rating_range = models.PositiveIntegerField(default=3)
     description = models.TextField(max_length=4000,default="test Description")
+    quantity_sold = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
