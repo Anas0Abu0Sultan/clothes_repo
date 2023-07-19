@@ -2,6 +2,7 @@
 
 {% block content %}
   <h2>Welcome to the Dashboard</h2>
+  <meta charset="UTF-8">
 
   {% for item in data %}
     <div class="user-card">
@@ -39,14 +40,14 @@
               <tr>
                 <td>{{ cart_item.product.name }}</td>
                 <td>{{ cart_item.quantity }}</td>
-                <td>{{ cart_item.total_price_one_product }}</td>
+                <td>${{ cart_item.total_price_one_product }}</td>
               </tr>
             {% endfor %}
           </tbody>
           <tfoot>
             <tr>
               <td colspan="2"><strong>Total:</strong></td>
-              <td>{{ item.total }}</td>
+              <td>${{ item.total }}</td>
             </tr>
           </tfoot>
         </table>
@@ -54,10 +55,17 @@
     </div>
   {% endfor %}
 
+  
   <div class="chart-container">
-    <h4>Highest Selling Products</h4>
-    <img src="data:image/png;base64,{{ chart_data }}" alt="Chart">
-</div>
+    <h4>Highest Selling Products - Bar Chart</h4>
+    <img src="data:image/png;base64,{{ chart_data }}" alt="Bar Chart">
+  </div>
+
+  <div class="chart-container">
+    <h4>Sales by Category - Pie Chart</h4>
+    <img src="data:image/png;base64,{{ pie_chart_data }}" alt="Pie Chart">
+  </div>
+
 
   <style>
     /* Add your custom CSS styles here */
@@ -120,6 +128,16 @@
       text-align: right;
       font-weight: bold;
     }
+    .chart-container {
+  margin: 20px 0;
+}
+
+.chart-container img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
   </style>
-  
+ 
 {% endblock %}

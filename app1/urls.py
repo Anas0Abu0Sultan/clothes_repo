@@ -30,5 +30,6 @@ urlpatterns = [
 
     path('dashboard/', views.dashboard, name='dashboard'),
 
-
+    path('delete_product/<int:pk>/', views.DeleteProductView.as_view(), name='delete_product'),
+    path('delete_category/<int:pk>/', views.DeleteCategoryView.as_view(), name='delete_category'),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

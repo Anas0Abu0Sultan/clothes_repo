@@ -323,119 +323,15 @@ def contact_view(request):
 
 #################################### Admin Views ##################################3
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-import matplotlib.pyplot as plt
 
-import matplotlib.pyplot as plt
+
 import io
 import base64
-
-
-# def fetch_highest_selling_products_data():
-#     # Query the products ordered by quantity sold in descending order
-#     products = Product.objects.order_by('-quantity_sold')
-
-#     # Get the highest selling products data
-#     highest_selling_products_data = [
-#         {'product_name': product.name, 'quantity': product.quantity_sold}
-#         for product in products
-#     ]
-
-#     return highest_selling_products_data
-
-
-# @login_required
-# def dashboard(request):
-
-#     highest_selling_products_data = fetch_highest_selling_products_data()
-#     labels = [item['product_name'] for item in highest_selling_products_data]
-#     quantities = [item['quantity'] for item in highest_selling_products_data]
-
-#     plt.figure(figsize=(10, 6))
-#     plt.bar(labels, quantities)
-#     plt.xlabel('Product')
-#     plt.ylabel('Quantity Sold')
-#     plt.title('Highest Selling Products')
-
-#     buffer = io.BytesIO()
-#     plt.savefig(buffer, format='png')
-#     buffer.seek(0)
-
-#     chart_image = base64.b64encode(buffer.read()).decode('utf-8')
-
-#     users = User.objects.all()
-#     data = []
-#     for user in users:
-#         billing_addresss = billing_address.objects.filter(user=user).first()
-#         cart_items = CartItem.objects.filter(user=user)
-#         total = 0
-#         for item in cart_items:
-#                 total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
-#         data.append({
-#             'user': user,
-#             'billing_address': billing_addresss,
-#             'cart_items': cart_items,
-#             'total': total
-#         })
-#     context = {
-#         'data': data,
-#         'highest_selling_products_data': highest_selling_products_data,
-#         'chart_image': chart_image,
- 
-#     }
-#     return render(request, 'dashboard/dashboard.html', context)
-    
-
-
-
-
-
-
-
-
-# def generate_chart(highest_selling_products_data):
-#     # Extract product names and quantities
-#     labels = [item['product_name'] for item in highest_selling_products_data]
-#     quantities = [item['quantity'] for item in highest_selling_products_data]
-
-#     # Generate the chart
-#     plt.bar(labels, quantities)
-#     plt.xlabel('Product')
-#     plt.ylabel('Quantity Sold')
-#     plt.title('Highest Selling Products')
-#     plt.xticks(rotation=90)
-#     plt.tight_layout()
-
-#     # Save the chart to a file
-#     chart_filename = 'highest_selling_products_chart.png'
-#     plt.savefig(chart_filename)
-
-#     return chart_filename
-
-
-
-
-
-# from django.db.models import Sum
-
-# def update_quantity_sold():
-#     # Query the quantity sold for each product using aggregation
-#     quantity_sold_data = OrderItem.objects.values('product').annotate(total_quantity_sold=Sum('quantity'))
-
-#     # Update the quantity_sold field of each product
-#     for data in quantity_sold_data:
-#         product_id = data['product']
-#         total_quantity_sold = data['total_quantity_sold']
-#         product = Product.objects.get(pk=product_id)
-#         product.quantity_sold = total_quantity_sold
-#         product.save()
-
-
+import matplotlib.pyplot as plt
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Product, CartItem
 from django.db.models import Sum
-
-
-
 
 
 def update_quantity_sold():
@@ -451,20 +347,65 @@ def update_quantity_sold():
         product.save()
 
 def fetch_highest_selling_products_data():
-    # Query the products ordered by quantity sold in descending order
-    products = Product.objects.order_by('-quantity_sold')
+    # Query the products ordered by quantity sold in descending order, along with their categories
+    products = Product.objects.select_related('category').order_by('-quantity_sold')
 
-    # Get the highest selling products data
+    # Get the highest selling products data along with their categories
     highest_selling_products_data = [
-        {'product_name': product.name, 'quantity': product.quantity_sold}
+        {
+            'product_name': product.name,
+            'quantity': product.quantity_sold,
+            'category': product.category.category_name  # Assuming category is a ForeignKey to a Category model
+        }
         for product in products
     ]
 
     return highest_selling_products_data
 
+def generate_chart(highest_selling_products_data):
+    # Extract product names and quantities
+    labels = [item['product_name'] for item in highest_selling_products_data]
+    quantities = [item['quantity'] for item in highest_selling_products_data]
+
+    # Generate the bar chart
+    plt.figure(figsize=(10, 6))
+    plt.bar(labels, quantities)
+    plt.xlabel('Product')
+    plt.ylabel('Quantity Sold')
+    plt.title('Highest Selling Products')
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+
+    # Save the bar chart to a file
+    chart_filename = 'highest_selling_products_chart.png'
+    plt.savefig(chart_filename)
+
+    return chart_filename
 
 
+def generate_pie_chart(highest_selling_products_data):
+    categories = {}
+    for item in highest_selling_products_data:
+        category_name = item['category']
+        quantity_sold = item['quantity']
+        if category_name in categories:
+            categories[category_name] += quantity_sold
+        else:
+            categories[category_name] = quantity_sold
 
+    # Extract category names and corresponding quantities
+    labels = list(categories.keys())
+    quantities = list(categories.values())
+
+    # Generate the pie chart
+    plt.figure(figsize=(8, 8))
+    plt.pie(quantities, labels=labels, autopct='%1.1f%%', startangle=140)
+    plt.title('Sales by Category')
+
+    chart_filename = 'category_sales_pie_chart.png'
+    plt.savefig(chart_filename)
+
+    return chart_filename
 
 
 
@@ -473,10 +414,11 @@ def fetch_highest_selling_products_data():
 def dashboard(request):
     # Update the quantity_sold field before generating the chart and fetching the highest selling products data
     update_quantity_sold()
+    categories = Category.objects.all()
 
     highest_selling_products_data = fetch_highest_selling_products_data()
 
-    # Generate the chart
+    # Generate the bar chart and convert it to base64-encoded data
     chart_filename = generate_chart(highest_selling_products_data)
 
     users = User.objects.all()
@@ -493,24 +435,24 @@ def dashboard(request):
             'total': total
         })
         for cart_item in cart_items:
-          cart_item.total_price_one_product = cart_item.product.price * cart_item.quantity
+            cart_item.total_price_one_product = cart_item.product.price * cart_item.quantity
 
-        
+    # Generate the chart and convert it to base64-encoded data
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    chart_data = base64.b64encode(buffer.read()).decode('utf-8')
 
-        # Generate the chart and convert it to base64-encoded data
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png')
-        buffer.seek(0)
-        chart_data = base64.b64encode(buffer.read()).decode('utf-8')
-
-
-
-
+    # Generate the pie chart and convert it to base64-encoded data
+    pie_chart_filename = generate_pie_chart(highest_selling_products_data)
+    pie_chart_data = encode_image_to_base64(pie_chart_filename)
 
     context = {
-     'data': data,
-    'highest_selling_products_data': highest_selling_products_data,
-'chart_data': chart_data,
+        'data': data,
+        'highest_selling_products_data': highest_selling_products_data,
+        'chart_data': chart_data,
+        'pie_chart_data': pie_chart_data,
+        'categories':categories,
     }
 
     return render(request, 'dashboard/dashboard.html', context)
@@ -518,24 +460,27 @@ def dashboard(request):
 
 
 
+def encode_image_to_base64(image_filename):
+    with open(image_filename, 'rb') as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+    return encoded_image
 
 
-def generate_chart(highest_selling_products_data):
-    # Extract product names and quantities
-    labels = [item['product_name'] for item in highest_selling_products_data]
-    quantities = [item['quantity'] for item in highest_selling_products_data]
 
-    # Generate the chart
-    plt.figure(figsize=(10, 6))
-    plt.bar(labels, quantities)
-    plt.xlabel('Product')
-    plt.ylabel('Quantity Sold')
-    plt.title('Highest Selling Products')
-    plt.xticks(rotation=90)
-    plt.tight_layout()
+################################### Add and Deletiing ###############################
 
-    # Save the chart to a file
-    chart_filename = 'highest_selling_products_chart.png'
-    plt.savefig(chart_filename)
+from django.views.generic.edit import CreateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
-    return chart_filename
+
+class DeleteProductView(LoginRequiredMixin, DeleteView):
+    model = Product
+    success_url = reverse_lazy('home')
+    template_name = 'confirm_delete.html'  # Create a template for confirmation (confirm_delete.html)
+
+# DeleteCategoryView using DeleteView for deleting a category
+class DeleteCategoryView(LoginRequiredMixin, DeleteView):
+    model = Category
+    success_url = reverse_lazy('home')
+    template_name = 'confirm_delete.html'  # Create a template for confirmation (confirm_delete.html)
