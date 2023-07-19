@@ -1,5 +1,26 @@
 {% extends 'bbase.html' %}
 {% block content %}
+<style>
+    /* styles.css */
+.delete-button {
+  background-color: #dc3545; /* Red color for the background */
+  color: #fff; /* White color for the text */
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Darker red color on hover */
+}
+
+.delete-button:active {
+  background-color: #bd2130; /* Slightly darker red color when the button is pressed */
+}
+
+ </style>
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -32,6 +53,13 @@
                         <h5>${{ product.price }}</h5>
                         <h6 class="text-muted ml-2"><del>${{ product.last_price }}</del></h6>
                     </div>
+                    {% if user.is_superuser %}
+
+                    <div class="actions">
+                        <a href="{% url 'delete_product' product.id %}" class="btn btn-danger delete-button">Delete Product</a>
+                        <!-- ... other buttons ... -->
+                      </div>
+                      {% endif %}
                     <div class="d-flex align-items-center justify-content-center mb-1">
                         {% if product.rating_range > 0 %}
                         <small class="fa fa-star text-primary mr-1"></small>
