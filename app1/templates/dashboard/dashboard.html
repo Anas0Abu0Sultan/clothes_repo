@@ -53,10 +53,16 @@
       </div>
     </div>
   {% endfor %}
+
   <div class="chart-container">
     <h4>Highest Selling Products</h4>
-    <img src="data:image/png;base64,{{ chart_image }}" alt="Chart">
-  </div>
+    <img src="data:image/png;base64,{{ chart_data }}" alt="Chart">
+</div>
+
+  <style>
+    /* Add your custom CSS styles here */
+  </style>
+
   <style>
     .user-card {
       background-color: #f9f9f9;
