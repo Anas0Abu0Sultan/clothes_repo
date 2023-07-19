@@ -438,12 +438,6 @@ from django.db.models import Sum
 
 
 
-
-
-
-
-
-
 def update_quantity_sold():
     # Query the quantity sold for each product using aggregation
     quantity_sold_data = CartItem.objects.values('product').annotate(total_quantity_sold=Sum('quantity'))
@@ -467,12 +461,6 @@ def fetch_highest_selling_products_data():
     ]
 
     return highest_selling_products_data
-
-
-
-
-
-
 
 
 
@@ -526,10 +514,6 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard/dashboard.html', context)
-
-
-
-
 
 
 
