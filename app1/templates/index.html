@@ -1,7 +1,27 @@
 {%extends 'base.html' %}  
 {% load static%}
  {% block content%}
- 
+ <style>
+    /* styles.css */
+.delete-button {
+  background-color: #dc3545; /* Red color for the background */
+  color: #fff; /* White color for the text */
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Darker red color on hover */
+}
+
+.delete-button:active {
+  background-color: #bd2130; /* Slightly darker red color when the button is pressed */
+}
+
+ </style>
     <!-- Carousel Start -->
     <div class="container-fluid mb-3">
         <div class="row px-xl-5">
@@ -108,9 +128,16 @@
                                 <a href={% url 'pro_via_cat' category.id%} class="nav-link -toggle" data-toggle=""><img class="img-fluid" src="{{ category.image.url }}" alt="" "></a>
                             </div>
                             <div class="flex-fill pl-3">
-                                <a href={% url 'pro_via_cat' category.id%} class="nav-link -toggle" data-toggle=""><h6>{{ category.category_name }}</h6> <i class="fa  float-right mt-1"></i></a>
+                                <a href={% url 'pro_via_cat' category.id %} class="nav-link -toggle" data-toggle=""><h6>{{ category.category_name }}</h6> <i class="fa  float-right mt-1"></i></a>
                                 
                                 <small class="text-body">{{ category.product_set.count }} Products</small>
+                                {% if user.is_superuser %}
+
+                                <div class="actions">
+                                    <a href="{% url 'delete_category' category.id %}" class="btn btn-danger delete-button">Delete category</a>
+                                    <!-- ... other buttons ... -->
+                                  </div>
+                                  {% endif %}
                             </div>
                         </div>
                     </a>

@@ -128,6 +128,17 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
+                            {% if user.is_superuser %}
+                            <li class="nav-item">
+                            <a href="{% url 'dashboard' %}" class="nav-item nav-link active" style="margin: 1px;">Dashboard</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'add_product' %}">Add Product</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'add_category' %}">Add Category</a>
+                            </li>
+                            
+                        {% endif %}
                             <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
                             <a href="{% url 'add_billing_address'%}" class="nav-item nav-link"> Biling Address</a>
                                     <a href="{% url 'cart_view'%}" class="nav-item nav-link">Shopping Cart</a>
@@ -154,9 +165,9 @@
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
-                <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor. Rebum tempor no vero est magna amet no</p>
-                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
+                <p class="mb-4">We wish you a pleasant shopping and hope you will visit us again</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Al-Nusirat, Gaza, Palestine</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>abusultananasbch@example.com</p>
                 <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+972594073606</p>
             </div>
             <div class="col-lg-8 col-md-12">
@@ -164,42 +175,40 @@
                     <div class="col-md-4 mb-5">
                         <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            <a class="text-secondary mb-2" href="{% url 'home'%}"><i class="fa fa-angle-right mr-2"></i>Home </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'cart_view'%}"><i class="fa fa-angle-right mr-2"></i>Shoping Cart </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'contact_view'%}"><i class="fa fa-angle-right mr-2"></i> contact </a></a>
+                          
+                            <a class="text-secondary mb-2" href="{% url 'login'%}"><i class="fa fa-angle-right mr-2"></i>Sign In </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'signup'%}"><i class="fa fa-angle-right mr-2"></i>Sign Up </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'logout'%}"><i class="fa fa-angle-right mr-2"></i> logout </a></a>
+
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
                         <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            <a class="text-secondary mb-2" href="{% url 'home'%}"><i class="fa fa-angle-right mr-2"></i>Home </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'cart_view'%}"><i class="fa fa-angle-right mr-2"></i>Shoping Cart </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'contact_view'%}"><i class="fa fa-angle-right mr-2"></i> contact </a></a>
+                          
+                            <a class="text-secondary mb-2" href="{% url 'login'%}"><i class="fa fa-angle-right mr-2"></i>Sign In </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'signup'%}"><i class="fa fa-angle-right mr-2"></i>Sign Up </a></a>
+                            <a class="text-secondary mb-2" href="{% url 'logout'%}"><i class="fa fa-angle-right mr-2"></i> logout </a></a>
+
                         </div>
-                    </div>
+                    </div> 
                     <div class="col-md-4 mb-5">
                         <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
-                        <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+                        <p>We wish you a pleasant shopping and hope you will visit us again</p>
                         <form action="">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Your Email Address">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary">Sign Up</button>
-                                </div>
-                            </div>
-                        </form>
+                         </form>
                         <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
                         <div class="d-flex">
-                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="https://github.com/Anas0Abu0Sultan"><i class="fab fa-github"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="https://www.facebook.com/anas.sn.79/"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="https://www.linkedin.com/in/anas-abu-sultan/"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-square" href="https://www.instagram.com/anas.b.sn300/"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>

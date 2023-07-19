@@ -256,7 +256,7 @@ def signup(request):
 
 
 ############################################## BillingAddress  #######################################
-
+@login_required
 def add_billing_address(request):
     cart_items = CartItem.objects.filter(user=request.user)
     total = sum(cart_item.product.price * cart_item.quantity for cart_item in cart_items)
@@ -306,6 +306,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpResponse
 
+@login_required
 def contact_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -477,10 +478,9 @@ from django.urls import reverse_lazy
 class DeleteProductView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('home')
-    template_name = 'confirm_delete.html'  # Create a template for confirmation (confirm_delete.html)
+    template_name = 'confirm_delete.html'  
 
-# DeleteCategoryView using DeleteView for deleting a category
 class DeleteCategoryView(LoginRequiredMixin, DeleteView):
     model = Category
     success_url = reverse_lazy('home')
-    template_name = 'confirm_delete.html'  # Create a template for confirmation (confirm_delete.html)
+    template_name = 'confirm_delete.html'  
