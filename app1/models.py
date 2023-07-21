@@ -24,10 +24,29 @@ class Product(models.Model):
         return self.name
 
 class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE) #هون انا عندي لينك بين عناصر الكارت وعناصر البرودكت ممكن مجموعة من الكارت ايتم يكومو نفس البرودكت الواحد
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    SIZE_CHOICES = [
+        ('XS', 'XS'),
+        ('S', 'S'),
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+    ]
+
+    COLOR_CHOICES = [
+        ('Black', 'Black'),
+        ('White', 'White'),
+        ('Red', 'Red'),
+        ('Blue', 'Blue'),
+        ('Green', 'Green'),
+    ]
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     total_price_one_product = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    size = models.CharField(max_length=10, choices=SIZE_CHOICES, default="no_size")
+    color = models.CharField(max_length=10, choices=COLOR_CHOICES, default="no_color")
+
 
     # total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
@@ -45,25 +64,6 @@ class billing_address(models.Model):
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
 
-# class order_color_size(models.Model):
-#     SIZE_CHOICES = [
-#         ('XS', 'XS'),
-#         ('S', 'S'),
-#         ('M', 'M'),
-#         ('L', 'L'),
-#         ('XL', 'XL'),
-#     ]
-
-#     COLOR_CHOICES = [
-#         ('Black', 'Black'),
-#         ('White', 'White'),
-#         ('Red', 'Red'),
-#         ('Blue', 'Blue'),
-#         ('Green', 'Green'),
-#     ]
-
-#     size = models.CharField(max_length=10, choices=SIZE_CHOICES, default="no_size")
-#     color = models.CharField(max_length=10, choices=COLOR_CHOICES, default="no_color")
 #     product = models.ForeignKey(Product,on_delete=models.CASCADE)
 
 #     def __str__(self):

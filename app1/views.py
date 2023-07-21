@@ -90,7 +90,6 @@ def add_category(request):
     return render(request, 'add_category.html', {'form': form})
 
 
-
 @login_required
 def update_quantity(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
@@ -103,6 +102,29 @@ def update_quantity(request, cart_item_id):
                 cart_item.quantity -= 1
         cart_item.save()
     return redirect('cart_view')
+
+
+
+
+@login_required
+def update_size(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    if request.method == 'POST':
+        cart_item.size = request.POST.get('size')
+        cart_item.save()
+    return redirect('cart_view')
+
+
+@login_required
+def update_color(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    if request.method == 'POST':
+        cart_item.color = request.POST.get('color')
+        cart_item.save()
+    return redirect('cart_view')
+
+
+
 
 @login_required
 def product_detail(request, id):
