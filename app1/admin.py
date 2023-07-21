@@ -5,3 +5,4 @@ admin.site.register(CartItem)
 admin.site.register(Product)
 admin.site.register(Category)
 admin.site.register(billing_address)
+# /

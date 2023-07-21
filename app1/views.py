@@ -104,13 +104,13 @@ def update_quantity(request, cart_item_id):
         cart_item.save()
     return redirect('cart_view')
 
-
-def product_detail(request,id):
+@login_required
+def product_detail(request, id):
     one_product = Product.objects.get(id=id)
     categories = Category.objects.all()
-    return render(request,'detail.html',{'one_product':one_product,'categories':categories})
 
-
+ 
+    return render(request, 'detail.html', {'one_product': one_product, 'categories': categories})
 
 # def product_via_category(request,id):
 #     category = Category.objects.get(id=id)
@@ -277,7 +277,6 @@ def add_billing_address(request):
         # Check if the user already has a billing address
         billing_address_object, created = billing_address.objects.get_or_create(user=user)
 
-        # Update the billing address fields
         billing_address_object.first_name = first_name
         billing_address_object.last_name = last_name
         billing_address_object.email = email
@@ -484,3 +483,11 @@ class DeleteCategoryView(LoginRequiredMixin, DeleteView):
     model = Category
     success_url = reverse_lazy('home')
     template_name = 'confirm_delete.html'  
+
+
+
+# def add_color(request):
+#     if request.method == 'POST':
+#         color = request.POST['color']
+#         size = request.POST['size']
+#         object_color = color_product.objects.create()
