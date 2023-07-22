@@ -1,8 +1,10 @@
-from django.urls import path
+from django.urls import path , re_path
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 from app1 import views
+from django.views.defaults import page_not_found
+
 urlpatterns = [
 
     path("login/",auth_views.LoginView.as_view(template_name="login.html"),name="login"),
@@ -39,4 +41,11 @@ urlpatterns = [
 
     path('delete_product/<int:pk>/', views.DeleteProductView.as_view(), name='delete_product'),
     path('delete_category/<int:pk>/', views.DeleteCategoryView.as_view(), name='delete_category'),
+    # path('nonexistent-page/', views.nonexistent_page_view, name='nonexistent_page'),
+
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+urlpatterns += [
+    re_path(r'^.*$', views.not_found_view),
+]

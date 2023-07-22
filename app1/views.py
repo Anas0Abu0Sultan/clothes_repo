@@ -513,3 +513,9 @@ class DeleteCategoryView(LoginRequiredMixin, DeleteView):
 #         color = request.POST['color']
 #         size = request.POST['size']
 #         object_color = color_product.objects.create()
+############################################################# ERRoR View
+
+from django.http import Http404
+
+def not_found_view(request):
+    return render (request,'404.html')
