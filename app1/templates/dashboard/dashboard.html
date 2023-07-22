@@ -34,6 +34,8 @@
             <tr>
               <th>Product</th>
               <th>Quantity</th>
+              <th>Size</th>
+              <th>Color</th>
               <th>Total</th>
             </tr>
           </thead>
@@ -42,6 +44,8 @@
               <tr>
                 <td>{{ cart_item.product.name }}</td>
                 <td>{{ cart_item.quantity }}</td>
+                <td>{{ cart_item.size }}</td>
+                <td>{{ cart_item.color }}</td>
                 <td>${{ cart_item.total_price_one_product }}</td>
               </tr>
             {% endfor %}

@@ -56,9 +56,8 @@
                                 </form>
                             </td>
                             <td class="align-middle">
-                                <span class="quantity-value" data-price="{{ cart_item.product.price }}">{{ cart_item.total_price_one_product }}</span>
+                                <span class="quantity-value" data-price="{{ cart_item.product.price }}">${{ cart_item.total_price_one_product }}</span>
                             </td>
-                            
                             <td class="align-middle">
                                 <form id="sizeForm{{ cart_item.id }}" method="POST" action="{% url 'update_size' cart_item.id %}">
                                     {% csrf_token %}
