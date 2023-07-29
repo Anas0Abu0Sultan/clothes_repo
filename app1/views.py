@@ -17,7 +17,7 @@ from django.conf import settings
 
 
 
-
+#Anas
 # #@login_required
 # def home(request):
 #     categories = Category.objects.all()  # Retrieve categories from the backend, adjust the query as needed
